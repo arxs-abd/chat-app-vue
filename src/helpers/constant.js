@@ -1,6 +1,6 @@
 const config = {
-    url : {
-        api : import.meta.env.VITE_BASE_URL,
-    }
+  url: {
+    api: import.meta.env.VITE_BASE_URL,
+  },
 }
-export {config}
+export { config }

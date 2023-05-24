@@ -1,59 +1,71 @@
 <template>
-    <div class="container-login">
-        <div class="login-box">
-            <h1>Login Chat Apps</h1>
-            <form id="form-login" @submit="loginForm">
-              <input type="text" name="username" v-model="username" placeholder="Username">
-              <input type="password" name="password" v-model="password" placeholder="Password">
-              <button id="login-button" type="submit">Login</button>
-            </form>
-        </div>
+  <div class="container-login">
+    <div class="login-box">
+      <h1>Login Chat Apps</h1>
+      <form id="form-login" @submit="loginForm">
+        <input
+          type="text"
+          name="username"
+          v-model="username"
+          placeholder="Username"
+        />
+        <input
+          type="password"
+          name="password"
+          v-model="password"
+          placeholder="Password"
+        />
+        <button id="login-button" type="submit">Login</button>
+      </form>
     </div>
+  </div>
 </template>
 
 <script>
-  import axios from 'axios'
-  import { onMounted } from 'vue'
-  import {useRouter} from 'vue-router'
+import axios from 'axios'
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
-  import { config } from '../helpers/constant'
-  import { getFromLocalStorage, setFromLocalStorage} from '../helpers/utility'
+import { config } from '../helpers/constant'
+import { getFromLocalStorage, setFromLocalStorage } from '../helpers/utility'
 
-  export default {
-    data() {
-      return {
-        username : 'aris',
-        password : '1234',
+export default {
+  data() {
+    return {
+      username: 'aris',
+      password: '1234',
+    }
+  },
+  methods: {
+    loginForm(e) {
+      e.preventDefault()
+
+      const username = this.username
+      const password = this.password
+      const data = {
+        username,
+        password,
       }
-    },
-    methods : {
-      loginForm(e) {
-        e.preventDefault()
-
-        const username = this.username
-        const password = this.password
-        const data = {
-          username, password
-        }
-        axios.post(config.url.api + '/api/login', data).then(response => {
+      axios
+        .post(config.url.api + '/api/login', data)
+        .then((response) => {
           const data = response.data.data
           data.accessToken = response.data.accessToken
           setFromLocalStorage('user-data', response.data.data)
           this.$router.push('/')
-          
-        }).catch(error => {
+        })
+        .catch((error) => {
           if (error.response) alert(error.response.data.msg)
         })
-      }
     },
-    setup() {
-      const router = useRouter()
-      onMounted(() => {
-        if (getFromLocalStorage('user-data').username) router.push('/')
-      })
-    }
-  }
-    
+  },
+  setup() {
+    const router = useRouter()
+    onMounted(() => {
+      if (getFromLocalStorage('user-data').username) router.push('/')
+    })
+  },
+}
 </script>
 
 <style>
