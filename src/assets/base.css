@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Lato&display=swap');
+
+:root {
+  --bgcolor : #050505;
+  --color1 : #524e4e; /*bg button*/
+  --color2 : #383838; /*bg contact*/
+  --color3 : #171917; /* bg chat*/
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: white;
+}
+
+html {
+  background-color: var(--bgcolor);
+}
+
+button, input[type="text"], input[type="password"] {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  outline: inherit;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Optional */
+  margin: 0;
+}
