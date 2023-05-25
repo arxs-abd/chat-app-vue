@@ -6,30 +6,34 @@
         To Chat
       </span>
     </div>
-    <div v-for="message in allMessages">
-      <Chat :message="message" />
+    <div class="special" v-for="time of Object.keys(allMessages)">
+      <TimeChat :time="time" />
+      <div>
+        <Chat v-for="message of allMessages[time]" :message="message" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { useStore } from 'vuex'
-import { computed } from 'vue'
+import { computed, ref, onUpdated } from 'vue'
+
 import Chat from './Chat.vue'
-import { onMounted } from 'vue'
-import { ref } from 'vue'
-import { watch } from 'vue'
-import { onUpdated } from 'vue'
+import TimeChat from './TimeChat.vue'
 
 export default {
   components: {
     Chat,
+    TimeChat,
   },
   setup() {
     const chatContainer = ref(null)
 
     const store = useStore()
+    // const timeChat = {}
     const allMessages = computed(() => {
+      // timeChat = Object.keys(store.state.messages)
       return store.state.messages
     })
 
@@ -47,6 +51,7 @@ export default {
     return {
       allMessages,
       chatContainer,
+      // timeChat,
     }
   },
 }
@@ -72,5 +77,13 @@ export default {
   flex-direction: column;
   height: 88%;
   font-family: 'Inter', sans-serif !important;
+}
+
+.special {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  /* padding: 10px; */
 }
 </style>

@@ -8,18 +8,55 @@ const setFromLocalStorage = (key, value) => {
   return localStorage.setItem(key, JSON.stringify(value))
 }
 
-let formatterTimeChat = new Intl.DateTimeFormat('id-ID', {
+const createChatAndTime = (message) => {
+  const result = {}
+
+  for (const chat of message) {
+    const date = new Date(chat.created_at)
+    const day = date.getDate()
+    const month = date.getMonth()
+    const year = date.getFullYear()
+    const newDate = new Date(`${year}-${month}-${day}`)
+
+    if (!result[newDate]) result[newDate] = []
+    result[newDate].push(chat)
+  }
+
+  return result
+}
+
+const createTimeForHuman = (time) => {
+  const f = new Intl.RelativeTimeFormat('id-ID', {
+    style: 'long',
+    numeric: 'auto',
+  })
+  const today = new Date()
+  const before = new Date(time)
+  const minDay = before.getDate() - today.getDate()
+  if (minDay > 0 || minDay < -7) return formatterTimeDivisionDate.format(before)
+  else if (minDay <= -3 && minDay >= -7)
+    return formatterTimeDivisionDay.format(before)
+  else if (minDay <= 0 && minDay >= -2) return f.format(minDay, 'days')
+}
+
+const formatterTimeChat = new Intl.DateTimeFormat('id-ID', {
   hour: '2-digit',
   minute: '2-digit',
 })
 
-let formatterTimeDivisionDate = new Intl.DateTimeFormat('id-ID', {
+const formatterTimeDivisionDate = new Intl.DateTimeFormat('id-ID', {
   month: 'long',
   day: '2-digit',
   year: 'numeric',
 })
-let formatterTimeDivisionDay = new Intl.DateTimeFormat('id-ID', {
+const formatterTimeDivisionDay = new Intl.DateTimeFormat('id-ID', {
   weekday: 'long',
 })
 
-export { getFromLocalStorage, setFromLocalStorage, formatterTimeChat }
+export {
+  getFromLocalStorage,
+  setFromLocalStorage,
+  formatterTimeChat,
+  createChatAndTime,
+  createTimeForHuman,
+}

@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
 import { config } from '../helpers/constant'
+import { createChatAndTime } from '../helpers/utility'
 
 export const store = createStore({
   state() {
@@ -32,7 +33,7 @@ export const store = createStore({
         config.url.api + `/api/conversation/message/${id_chat}`,
         options
       )
-      commit('setMessage', response.data.chat)
+      commit('setMessage', createChatAndTime(response.data.chat))
     },
   },
 })

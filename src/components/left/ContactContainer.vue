@@ -1,12 +1,13 @@
 <template>
-  <div v-for="(contact, index) in allContact">
-    <Contact
-      :contact="contact"
-      :index="index"
-      :activeContact="activeContact"
-      :updateActiveContact="updateActiveContact"
-    />
-  </div>
+  <!-- <div v-for="(contact, index) in allContact"> -->
+  <Contact
+    v-for="(contact, index) in allContact"
+    :contact="contact"
+    :index="index"
+    :activeContact="activeContact"
+    :updateActiveContact="updateActiveContact"
+  />
+  <!-- </div> -->
 </template>
 
 <script>
