@@ -1,5 +1,9 @@
 <template>
-  <div class="item-card" @click="handleContactClick">
+  <div
+    class="item-card"
+    :class="{ active: active }"
+    @click="handleContactClick"
+  >
     <span v-bind:data-id="contact.id_chat">{{ contact.sender.username }}</span>
     <span class="last-chat">Last Chat</span>
   </div>
@@ -9,24 +13,32 @@
 import { useStore } from 'vuex'
 
 import { getFromLocalStorage } from '../../helpers/utility'
+import { computed } from '@vue/reactivity'
 
 export default {
-  props: ['contact'],
+  props: ['contact', 'activeContact', 'updateActiveContact'],
   setup(props) {
     const data = getFromLocalStorage('user-data')
     const store = useStore()
+    const active = computed(() => {
+      return props.contact.sender.id === props.activeContact
+    })
 
-    const handleContactClick = (e) => {
+    const handleContactClick = () => {
+      if (props.contact.sender.id === props.activeContact) return
       store.commit('setUsername', props.contact.sender.username)
       store.commit('resetMessage')
       store.dispatch('getChat', {
         accessToken: data.accessToken,
         id_chat: props.contact.id_chat,
       })
+      props.updateActiveContact(props.contact.sender.id)
+      // props.activeContact = props.contact.id_chat
     }
 
     return {
       handleContactClick,
+      active,
     }
   },
 }

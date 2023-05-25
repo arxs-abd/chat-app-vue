@@ -1,6 +1,11 @@
 <template>
-  <div v-for="contact in allContact">
-    <Contact :contact="contact" />
+  <div v-for="(contact, index) in allContact">
+    <Contact
+      :contact="contact"
+      :index="index"
+      :activeContact="activeContact"
+      :updateActiveContact="updateActiveContact"
+    />
   </div>
 </template>
 
@@ -12,6 +17,7 @@ import Contact from './Contact.vue'
 
 import { getFromLocalStorage } from '../../helpers/utility'
 import { config } from '../../helpers/constant'
+import { onMounted } from 'vue'
 
 export default {
   components: {
@@ -20,20 +26,29 @@ export default {
   setup() {
     let allContact = ref([])
     const data = getFromLocalStorage('user-data')
-    let user = ref(data.username)
-    const options = {
-      headers: {
-        Authorization: 'Bearer ' + data.accessToken,
-      },
+    const activeContact = ref(null)
+
+    onMounted(async () => {
+      const options = {
+        headers: {
+          Authorization: 'Bearer ' + data.accessToken,
+        },
+      }
+      const response = await axios.get(
+        config.url.api + '/api/conversation',
+        options
+      )
+      allContact.value = response.data.data
+    })
+
+    const updateActiveContact = (contact) => {
+      activeContact.value = contact
     }
-    axios
-      .get(config.url.api + '/api/conversation', options)
-      .then((response) => {
-        allContact.value = response.data.data
-      })
 
     return {
       allContact,
+      activeContact,
+      updateActiveContact,
     }
   },
 }
