@@ -24,6 +24,7 @@ import ContactContainer from './left/ContactContainer.vue'
 
 import { getFromLocalStorage, deleteLocalStorage } from '../helpers/utility'
 import { config } from '../helpers/constant'
+import { useRouter } from 'vue-router'
 
 export default {
   components: {
@@ -34,11 +35,14 @@ export default {
     let allContact = ref([])
     const data = getFromLocalStorage('user-data')
     let user = ref(data.username)
+    const router = useRouter()
+
     const options = {
       headers: {
         Authorization: 'Bearer ' + data.accessToken,
       },
     }
+
     axios
       .get(config.url.api + '/api/conversation', options)
       .then((response) => {
@@ -54,6 +58,7 @@ export default {
 
     const logout = () => {
       deleteLocalStorage()
+      return router.push('/login')
     }
 
     return {

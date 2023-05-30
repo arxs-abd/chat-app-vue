@@ -2,7 +2,7 @@
   <div class="container-login">
     <div class="login-box">
       <h1>Login Chat Apps</h1>
-      <form id="form-login" @submit="loginForm">
+      <form id="form-login" @submit.prevent="loginForm">
         <input
           type="text"
           name="username"
@@ -23,47 +23,46 @@
 
 <script>
 import axios from 'axios'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { config } from '../helpers/constant'
 import { getFromLocalStorage, setFromLocalStorage } from '../helpers/utility'
 
 export default {
-  data() {
-    return {
-      username: 'aris',
-      password: '1234',
-    }
-  },
-  methods: {
-    loginForm(e) {
-      e.preventDefault()
+  setup() {
+    const router = useRouter()
+    const username = ref('')
+    const password = ref('')
 
-      const username = this.username
-      const password = this.password
+    const loginForm = async () => {
       const data = {
-        username,
-        password,
+        username: username.value,
+        password: password.value,
       }
+
       axios
         .post(config.url.api + '/api/login', data)
         .then((response) => {
           const data = response.data.data
           data.accessToken = response.data.accessToken
           setFromLocalStorage('user-data', response.data.data)
-          this.$router.push('/')
+          return router.push('/')
         })
         .catch((error) => {
           if (error.response) alert(error.response.data.msg)
         })
-    },
-  },
-  setup() {
-    const router = useRouter()
+    }
+
     onMounted(() => {
       if (getFromLocalStorage('user-data').username) router.push('/')
     })
+
+    return {
+      username,
+      password,
+      loginForm,
+    }
   },
 }
 </script>

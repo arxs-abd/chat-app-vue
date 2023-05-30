@@ -26,7 +26,8 @@ export default {
     const store = useStore()
 
     onMounted(() => {
-      if (!getFromLocalStorage('user-data').username) router.push('/login')
+      if (!getFromLocalStorage('user-data').username)
+        return router.push('/login')
       store.commit('resetMessage')
 
       pusher.connection.bind('connected', async () => {
