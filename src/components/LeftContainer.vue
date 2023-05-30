@@ -1,6 +1,11 @@
 <template>
   <div class="container-user">
-    <div class="user" @mouseout="handleMouseOut" @mouseover="handleMouseOver">
+    <div
+      class="user"
+      @mouseout="handleMouseOut"
+      @mouseover="handleMouseOver"
+      @click="logout"
+    >
       <span id="username">{{ user }}</span>
     </div>
     <div class="find-user">
@@ -17,7 +22,7 @@ import axios from 'axios'
 import Contact from './left/Contact.vue'
 import ContactContainer from './left/ContactContainer.vue'
 
-import { getFromLocalStorage } from '../helpers/utility'
+import { getFromLocalStorage, deleteLocalStorage } from '../helpers/utility'
 import { config } from '../helpers/constant'
 
 export default {
@@ -47,11 +52,16 @@ export default {
       user.value = data.username
     }
 
+    const logout = () => {
+      deleteLocalStorage()
+    }
+
     return {
       allContact,
       user,
       handleMouseOut,
       handleMouseOver,
+      logout,
     }
   },
 }

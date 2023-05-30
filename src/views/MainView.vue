@@ -7,13 +7,14 @@
 
 <script>
 import { useRouter } from 'vue-router'
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
 
 import ContactContainer from '../components/LeftContainer.vue'
 import ChatContainer from '../components/RightContainer.vue'
 
-import { getFromLocalStorage } from '../helpers/utility'
+import { getFromLocalStorage, setFromLocalStorage } from '../helpers/utility'
+import { pusher } from '../helpers/pusher'
 
 export default {
   components: {
@@ -23,9 +24,14 @@ export default {
   setup() {
     const router = useRouter()
     const store = useStore()
+
     onMounted(() => {
       if (!getFromLocalStorage('user-data').username) router.push('/login')
       store.commit('resetMessage')
+
+      pusher.connection.bind('connected', async () => {
+        store.commit('setSocketId', pusher.connection.socket_id)
+      })
     })
   },
 }

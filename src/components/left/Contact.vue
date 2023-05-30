@@ -13,6 +13,7 @@
 import { useStore } from 'vuex'
 
 import { getFromLocalStorage } from '../../helpers/utility'
+import { pusher } from '../../helpers/pusher'
 import { computed } from '@vue/reactivity'
 
 export default {
@@ -23,17 +24,27 @@ export default {
     const active = computed(() => {
       return props.contact.sender.id === props.activeContact
     })
+    const conversationId = computed(() => {
+      return store.state.conversationId
+    })
 
-    const handleContactClick = () => {
+    const handleContactClick = async () => {
       if (props.contact.sender.id === props.activeContact) return
       store.commit('setUsername', props.contact.sender.username)
+      store.commit('setConversationId', props.contact.id_chat)
       store.commit('resetMessage')
       store.dispatch('getChat', {
         accessToken: data.accessToken,
         id_chat: props.contact.id_chat,
       })
       props.updateActiveContact(props.contact.sender.id)
-      // props.activeContact = props.contact.id_chat
+
+      const channel = pusher.subscribe('presence-chat-room')
+      channel.unbind_all()
+      channel.bind(conversationId.value, (data) => {
+        if (props.contact.id_chat !== conversationId.value) return
+        store.commit('addMessage', data)
+      })
     }
 
     return {

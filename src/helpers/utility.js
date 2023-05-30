@@ -8,6 +8,10 @@ const setFromLocalStorage = (key, value) => {
   return localStorage.setItem(key, JSON.stringify(value))
 }
 
+const deleteLocalStorage = () => {
+  return localStorage.clear()
+}
+
 const createChatAndTime = (message) => {
   const result = {}
 
@@ -59,4 +63,5 @@ export {
   formatterTimeChat,
   createChatAndTime,
   createTimeForHuman,
+  deleteLocalStorage,
 }
