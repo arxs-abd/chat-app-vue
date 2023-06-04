@@ -49,10 +49,10 @@ export default {
         allContact.value = response.data.data
       })
 
-    const handleMouseOver = (e) => {
+    const handleMouseOver = () => {
       user.value = 'logout'
     }
-    const handleMouseOut = (e) => {
+    const handleMouseOut = () => {
       user.value = data.username
     }
 
