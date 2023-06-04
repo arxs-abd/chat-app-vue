@@ -9,12 +9,14 @@
 import { useRouter } from 'vue-router'
 import { onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
+import axios from 'axios'
 
 import ContactContainer from '../components/LeftContainer.vue'
 import ChatContainer from '../components/RightContainer.vue'
 
 import { getFromLocalStorage, setFromLocalStorage } from '../helpers/utility'
 import { pusher } from '../helpers/pusher'
+import { config } from '../helpers/constant'
 
 export default {
   components: {
@@ -24,12 +26,21 @@ export default {
   setup() {
     const router = useRouter()
     const store = useStore()
+    const data = getFromLocalStorage('user-data')
 
-    onMounted(() => {
+    onMounted(async () => {
       if (!getFromLocalStorage('user-data').username)
         return router.push('/login')
-      store.commit('resetMessage')
-
+      const options = {
+        headers: {
+          Authorization: 'Bearer ' + data.accessToken,
+        },
+      }
+      const allMessage = await axios.get(
+        config.url.api + '/api/allChat',
+        options
+      )
+      console.log(allMessage.data)
       pusher.connection.bind('connected', async () => {
         store.commit('setSocketId', pusher.connection.socket_id)
       })
