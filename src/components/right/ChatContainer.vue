@@ -39,7 +39,6 @@ export default {
     })
     const allMessages = computed(() => {
       if (conversationId.value === '') return ''
-      // console.log(store.state.messages)
       return store.state.messages[conversationId.value]
     })
 

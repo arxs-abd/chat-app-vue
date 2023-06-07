@@ -42,6 +42,7 @@ export default {
       channel.unbind_all()
       channel.bind(conversationId.value, (data) => {
         if (props.contact.id_chat !== conversationId.value) return
+        if (props.contact.id_chat === data.id) return
         store.commit('addMessage', data)
       })
     }
