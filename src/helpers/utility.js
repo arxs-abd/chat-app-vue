@@ -18,7 +18,7 @@ const createChatAndTime = (message) => {
   for (const chat of message) {
     const date = new Date(chat.created_at)
     const day = date.getDate()
-    const month = date.getMonth()
+    const month = Number(date.getMonth()) + 1
     const year = date.getFullYear()
     const newDate = new Date(`${year}-${month}-${day}`)
 

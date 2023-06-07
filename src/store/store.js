@@ -28,17 +28,23 @@ export const store = createStore({
     setMessage(state, message) {
       state.messages = message
     },
+    setFetchMessage(state, message) {
+      state.messages[state.conversationId] = message
+    },
     addMessage(state, message) {
+      const conversationId = state.conversationId
       const date = new Date(message.created_at)
       const day = date.getDate()
-      const month = date.getMonth()
+      const month = Number(date.getMonth()) + 1
       const year = date.getFullYear()
       const newDate = new Date(`${year}-${month}-${day}`)
-      if (newDate in state.messages) state.messages[newDate].push(message)
-      else state.messages[newDate] = [message]
+
+      if (newDate in state.messages[conversationId])
+        state.messages[conversationId][newDate].push(message)
+      else state.messages[conversationId][newDate] = [message]
     },
     resetMessage(state) {
-      state.messages = []
+      state.messages = {}
     },
   },
   actions: {
@@ -52,7 +58,7 @@ export const store = createStore({
         config.url.api + `/api/conversation/message/${id_chat}`,
         options
       )
-      commit('setMessage', createChatAndTime(response.data.chat))
+      commit('setFetchMessage', createChatAndTime(response.data.chat))
     },
   },
 })

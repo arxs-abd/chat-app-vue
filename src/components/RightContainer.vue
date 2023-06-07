@@ -67,6 +67,7 @@ export default {
           'x-socket-id': socketId.value,
         },
       }
+
       await axios.post(config.url.api + '/api/chat', messageData, options)
 
       const sendData = {

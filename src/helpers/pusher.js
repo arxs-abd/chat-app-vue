@@ -15,6 +15,4 @@ const pusher = new Pusher(config.pusher.api_key, {
   },
 })
 
-// const channel = pusher.subscribe('presence-chat-room')
-
 export { pusher }

@@ -3,11 +3,11 @@
 </template>
 
 <script>
-import { createTimeForHuman } from '../../helpers/utility'
 export default {
-  props: ['time'],
+  props: ['time', 'index'],
   setup(props) {
-    const time = createTimeForHuman(props.time)
+    const time = props.index + ' : ' + props.time
+    // const time = createTimeForHuman(props.time)
     return {
       time,
     }

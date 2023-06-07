@@ -26,21 +26,12 @@ export default {
   setup() {
     const router = useRouter()
     const store = useStore()
-    const data = getFromLocalStorage('user-data')
+    // const data = getFromLocalStorage('user-data')
 
     onMounted(async () => {
       if (!getFromLocalStorage('user-data').username)
         return router.push('/login')
-      const options = {
-        headers: {
-          Authorization: 'Bearer ' + data.accessToken,
-        },
-      }
-      const allMessage = await axios.get(
-        config.url.api + '/api/allChat',
-        options
-      )
-      console.log(allMessage.data)
+
       pusher.connection.bind('connected', async () => {
         store.commit('setSocketId', pusher.connection.socket_id)
       })

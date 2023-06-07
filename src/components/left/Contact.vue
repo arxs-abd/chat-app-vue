@@ -32,7 +32,6 @@ export default {
       if (props.contact.sender.id === props.activeContact) return
       store.commit('setUsername', props.contact.sender.username)
       store.commit('setConversationId', props.contact.id_chat)
-      store.commit('resetMessage')
       store.dispatch('getChat', {
         accessToken: data.accessToken,
         id_chat: props.contact.id_chat,

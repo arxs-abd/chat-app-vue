@@ -6,10 +6,12 @@
         To Chat
       </span>
     </div>
-    <div class="special" v-for="time of Object.keys(allMessages)">
-      <TimeChat :time="time" />
-      <div>
-        <Chat v-for="message of allMessages[time]" :message="message" />
+    <div v-if="allMessages">
+      <div class="special" v-for="(time, index) of Object.keys(allMessages)">
+        <span class="date-chat">{{ createTimeForHuman(time) }}</span>
+        <div>
+          <Chat v-for="message of allMessages[time]" :message="message" />
+        </div>
       </div>
     </div>
   </div>
@@ -21,6 +23,7 @@ import { computed, ref, onUpdated } from 'vue'
 
 import Chat from './Chat.vue'
 import TimeChat from './TimeChat.vue'
+import { createTimeForHuman } from '../../helpers/utility'
 
 export default {
   components: {
@@ -31,10 +34,13 @@ export default {
     const chatContainer = ref(null)
 
     const store = useStore()
-    // const timeChat = {}
+    const conversationId = computed(() => {
+      return store.state.conversationId
+    })
     const allMessages = computed(() => {
-      // timeChat = Object.keys(store.state.messages)
-      return store.state.messages
+      if (conversationId.value === '') return ''
+      // console.log(store.state.messages)
+      return store.state.messages[conversationId.value]
     })
 
     onUpdated(() => {
@@ -51,7 +57,7 @@ export default {
     return {
       allMessages,
       chatContainer,
-      // timeChat,
+      createTimeForHuman,
     }
   },
 }
@@ -85,5 +91,19 @@ export default {
   display: flex;
   flex-direction: column;
   /* padding: 10px; */
+}
+
+.date-chat {
+  font-size: small;
+  font-weight: normal;
+  text-transform: capitalize;
+  background-color: grey;
+  color: white;
+  width: fit-content;
+  padding: 8px;
+  border-radius: 10px;
+  align-self: center;
+  text-align: center;
+  margin: 10px 0;
 }
 </style>
